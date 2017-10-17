@@ -1,0 +1,3 @@
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\E-Paper Display\E-Paper Display\bin\Debug\EPaperCommunicator.exe.config
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\E-Paper Display\E-Paper Display\obj\Debug\EPaperCommunicator.exe
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\E-Paper Display\E-Paper Display\obj\Debug\EPaperCommunicator.pdb

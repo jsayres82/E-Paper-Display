@@ -1,0 +1,12 @@
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\obj\Debug\E-Paper Communicator.csprojResolveAssemblyReference.cache
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\bin\Debug\EPaperCommunicator.exe.config
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\bin\Debug\EPaperCommunicator.exe
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\bin\Debug\EPaperCommunicator.pdb
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\obj\Debug\EPaperCommunicator.exe
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\obj\Debug\EPaperCommunicator.pdb
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\obj\Debug\EPaperCommunicator.ePaperView.resources
+c:\users\jsayres\documents\visual studio 2015\Projects\epdLoader\epdLoader\obj\Debug\E-Paper Communicator.csproj.GenerateResource.Cache
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\epdLoader\epdLoader\obj\Debug\EPaperCommunicator.Properties.Resources.resources
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\E-Paper Display\E-Paper Display\bin\Debug\EPaperCommunicator.exe.config
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\E-Paper Display\E-Paper Display\obj\Debug\EPaperCommunicator.exe
+C:\Users\jsayres\Documents\Visual Studio 2015\Projects\E-Paper Display\E-Paper Display\obj\Debug\EPaperCommunicator.pdb
