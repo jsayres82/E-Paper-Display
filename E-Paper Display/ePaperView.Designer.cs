@@ -456,6 +456,7 @@
             this.pbCanvas.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCanvas_DragDrop);
             this.pbCanvas.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCanvas_DragEnter);
             this.pbCanvas.MouseHover += new System.EventHandler(this.pbCanvas_MouseHover);
+            this.pbCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbCanvas_MouseMove);
             // 
             // tsImage
             // 
@@ -491,14 +492,12 @@
             this.tsBtnRect.Name = "tsBtnRect";
             this.tsBtnRect.Size = new System.Drawing.Size(79, 22);
             this.tsBtnRect.Text = "Rectangle";
-            this.tsBtnRect.Click += new System.EventHandler(this.tsBtnRect_Click);
             // 
             // tsBtnFilledRect
             // 
-            this.tsBtnFilledRect.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnFilledRect.Image")));
             this.tsBtnFilledRect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnFilledRect.Name = "tsBtnFilledRect";
-            this.tsBtnFilledRect.Size = new System.Drawing.Size(110, 22);
+            this.tsBtnFilledRect.Size = new System.Drawing.Size(94, 22);
             this.tsBtnFilledRect.Text = "Filled Rectangle";
             // 
             // tsBtnCircle
@@ -511,10 +510,9 @@
             // 
             // tsBtnFilledCircle
             // 
-            this.tsBtnFilledCircle.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnFilledCircle.Image")));
             this.tsBtnFilledCircle.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnFilledCircle.Name = "tsBtnFilledCircle";
-            this.tsBtnFilledCircle.Size = new System.Drawing.Size(88, 22);
+            this.tsBtnFilledCircle.Size = new System.Drawing.Size(72, 22);
             this.tsBtnFilledCircle.Text = "Filled Circle";
             // 
             // tsBtnText

@@ -22,11 +22,8 @@ namespace EPaperCommunicator
         private List<string> messageQueue;
         private List<Bitmap> bmpImages;
         private List<Point> line;
-        private Timer updateDrawingTimer;
+        private Pen canvasPen;
         private ToolTip tt;
-        private string draggedImageName;
-
-        private Graphics g;
         Dictionary<string, int> messageDictionary = new Dictionary<string, int>()
         {
             {"GetColor", 2},
@@ -36,14 +33,13 @@ namespace EPaperCommunicator
             {"HandShake", 2},
             {"SetStorage", 2},
             {"SetDisplay", 2},
-            {"SetColor", 2},
+            {"SetForeColor", 2},
+            {"SetBackColor", 2},
             {"SetFont", 2},
             {"ClearScreen", 2 },
-            {"UpdateScreen", 2 },
-            {"DrawImage", 2 },
-            {"Draw", 2 }
+            {"UpdateScreen", 2 }
         };
-        
+
         public ePaperView()
         {
             InitializeComponent();
@@ -52,28 +48,19 @@ namespace EPaperCommunicator
             cbBackGround.DataSource = Enum.GetValues(typeof(Constants.ScreenColor));
             cbForeGround.DataSource = Enum.GetValues(typeof(Constants.ScreenColor));
             cbFont.DataSource = Enum.GetValues(typeof(Constants.FontSize));
-            updateDrawingTimer = new Timer();
-            updateDrawingTimer.Interval = 100;
-            updateDrawingTimer.Tick += UpdateDrawingTimer_Tick;
-            updateDrawingTimer.Enabled = false;
             bmpImages = new List<Bitmap>();
             line = new List<Point>();
             messageQueue = new List<string>();
-            g = pbCanvas.CreateGraphics();
             epd = new EpdCommunicator(this.epdPort);
-            draggedImageName = string.Empty;
             epd.EpdConnected += Epd_EpdConnected;
 
             tt = new ToolTip();
-            tt.InitialDelay = 0;
-            tt.ReshowDelay = 0;
-
-            //tt.SetToolTip(this.pbCanvas, getCanvasCoordinates());
+            canvasPen = new Pen(Color.Black);
         }
 
         private void UpdateDrawingTimer_Tick(object sender, EventArgs e)
         {
-            if(line.Count == 1)
+            if (line.Count == 1)
             {
 
             }
@@ -99,8 +86,6 @@ namespace EPaperCommunicator
 
         private void Epd_EpdConnected(object sender, EventArgs e)
         {
-            btnConnect.Text = "DISCONNECT";
-
             messageQueue.Add("GetColor");
             epd.GetDrawingColor();
 
@@ -142,14 +127,14 @@ namespace EPaperCommunicator
 
         private void cbPort_SelectedIndexChanged(object sender, EventArgs e)
         {
-            epd.ComPortName = cbPort.SelectedText;
+            epd.ComPortName = portList[cbPort.SelectedIndex];
         }
-        
+
         public void UpdateRadioButton(RadioButton btn, bool value)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<RadioButton, bool>(UpdateRadioButton), btn,  value );
+                this.Invoke(new Action<RadioButton, bool>(UpdateRadioButton), btn, value);
                 return;
             }
             btn.Checked = value;
@@ -177,12 +162,13 @@ namespace EPaperCommunicator
 
         private void epdPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+
             if (messageQueue.Count == 0)
                 epdPort.ReadExisting();
             else if (epdPort.BytesToRead < messageDictionary[messageQueue.First()])
                 return;
 
-            while(epdPort.BytesToRead > 0)
+            while (epdPort.BytesToRead > 0)
             {
                 byte[] response = new byte[messageDictionary[messageQueue.First()]];
                 epdPort.Read(response, 0, messageDictionary[messageQueue.First()]);
@@ -194,7 +180,7 @@ namespace EPaperCommunicator
 
                 if (currentMessage.Equals("HandShake"))
                     return;
-                else if(currentMessage.Equals("DrawImage"))
+                else if (currentMessage.Equals("DrawImage"))
                 {
                     epdPort.ReadExisting();
 
@@ -238,7 +224,7 @@ namespace EPaperCommunicator
                     UpdateComboBox(cbFont, response[0] - 0x30);
                 }
             }
-           
+
         }
 
         private void rbNand_CheckedChanged(object sender, EventArgs e)
@@ -246,22 +232,58 @@ namespace EPaperCommunicator
             messageQueue.Add("SetStorage");
             epd.SetMicroSDStorage(rbNand.Checked ? false : true);
         }
-
+        
         private void rbLandScape_CheckedChanged(object sender, EventArgs e)
         {
             messageQueue.Add("SetDisplay");
             epd.SetDisplayToPortrait(rbLandScape.Checked ? false : true);
         }
-        
+
         private void cbForeGround_SelectedIndexChanged(object sender, EventArgs e)
         {
-            messageQueue.Add("SetColor");
+            switch (cbForeGround.SelectedIndex)
+            {
+                case Constants.BLACK:
+                    canvasPen.Color = Color.Black;
+                    break;
+                case Constants.DARK_GRAY:
+                    canvasPen.Color = Color.DarkGray;
+                    break;
+                case Constants.GRAY:
+                    canvasPen.Color = Color.Gray;
+                    break;
+                case Constants.WHITE:
+                    canvasPen.Color = Color.White;
+                    break;
+                default:
+                    canvasPen.Color = Color.Black;
+                    break;
+            }
+            messageQueue.Add("SetForeColor");
             epd.SetColor(Convert.ToByte(cbForeGround.SelectedIndex), Convert.ToByte(cbBackGround.SelectedIndex));
         }
 
         private void cbBackGround_SelectedIndexChanged(object sender, EventArgs e)
         {
-            messageQueue.Add("SetColor");
+            switch (cbBackGround.SelectedIndex)
+            {
+                case Constants.BLACK:
+                    pbCanvas.BackColor = Color.Black;
+                    break;
+                case Constants.DARK_GRAY:
+                    pbCanvas.BackColor = Color.DarkGray;
+                    break;
+                case Constants.GRAY:
+                    pbCanvas.BackColor = Color.Gray;
+                    break;
+                case Constants.WHITE:
+                    pbCanvas.BackColor = Color.White;
+                    break;
+                default:
+                    pbCanvas.BackColor = Color.White;
+                    break;
+            }
+            messageQueue.Add("SetBackColor");
             epd.SetColor(Convert.ToByte(cbForeGround.SelectedIndex), Convert.ToByte(cbBackGround.SelectedIndex));
         }
 
@@ -288,7 +310,7 @@ namespace EPaperCommunicator
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             messageQueue.Add("ClearScreen");
-            epd.ClearScreen(); 
+            epd.ClearScreen();
             messageQueue.Add("UpdateScreen");
             epd.Repaint();
         }
@@ -313,7 +335,7 @@ namespace EPaperCommunicator
                     myTreeNodeArray[countIndex] = new TreeNode(Img.Split('\\').Last(), ilBitmaps.Images.Count - 1, ilBitmaps.Images.Count - 1);
                     countIndex++;
                 }
-                
+
                 TreeNode imgNode = new TreeNode(folderName.Split('\\').Last(), 0, 0, myTreeNodeArray);
                 tvImageListView.Nodes.Add(imgNode);
             }
@@ -322,7 +344,6 @@ namespace EPaperCommunicator
         private void tvImageListView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var node = (TreeNode)e.Item;
-            draggedImageName = node.Text;
             Bitmap bmp = bmpImages[node.SelectedImageIndex - 1];
             var dragImage = bmp;
             IntPtr icon = dragImage.GetHicon();
@@ -345,21 +366,24 @@ namespace EPaperCommunicator
         private void pbCanvas_DragDrop(object sender, DragEventArgs e)
         {
             var bmp = (Bitmap)e.Data.GetData(typeof(Bitmap));
-            var pb = new PictureBox();
-            pb.Image = (Bitmap)e.Data.GetData(typeof(Bitmap));
-            pb.Size = pb.Image.Size;
-            pb.Location = this.pbCanvas.PointToClient(new Point(e.X - pb.Width / 2, e.Y - pb.Height / 2));
-            Bitmap newImg = new Bitmap(pbCanvas.Image);
-            using (Graphics g = Graphics.FromImage(newImg))
+            Point bmplocation = pbCanvas.PointToClient(new Point(e.X - bmp.Width / 2, e.Y - bmp.Height / 2));
+            try
             {
-                g.DrawImage(pb.Image, pb.Location);
+                Bitmap newImg = new Bitmap(pbCanvas.Image);
+                // Assign the first image to the picture variable.
+                using (Graphics g = Graphics.FromImage(newImg))
+                {
+                    g.DrawImage(bmp, bmplocation);
+                }
+                pbCanvas.Image = newImg;
             }
-            messageQueue.Add("DrawImage");
-            epd.DisplayImage(pb.Location.X, pb.Location.Y, draggedImageName);
-            draggedImageName = string.Empty;
-            g.Flush();
-            pbCanvas.Image = newImg;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }            
         }
+
 
         private void tsBtnLine_Click(object sender, EventArgs e)
         {
@@ -372,9 +396,8 @@ namespace EPaperCommunicator
             pbCanvas.MouseDown -= pbCanvas_DrawLineMouseDown;
             pbCanvas.MouseUp += pbCanvas_DrawLineMouseUp;
             line.Add(e.Location);
-            updateDrawingTimer.Start();
         }
-        
+
         private string getCanvasCoordinates()
         {
             this.Cursor = new Cursor(Cursor.Current.Handle);
@@ -391,27 +414,50 @@ namespace EPaperCommunicator
             {
                 g.DrawLine(new Pen(Color.Black, 3), line[0], line[1]);
             }
-            epd.DrawLine(line[0].X, line[0].Y, line[1].X, line[1].Y);
-            messageQueue.Add("Draw");
             line.Clear();
             pbCanvas.Cursor = Cursors.Default;
             pbCanvas.Image = newImg;
         }
-
-        private void tsBtnRect_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void pbCanvas_MouseHover(object sender, EventArgs e)
         {
-            tt.Show(getCanvasCoordinates(), pbCanvas); 
+            tt.AutoPopDelay = 2000;
+            tt.Show(getCanvasCoordinates(), pbCanvas);
         }
-
         private void tvImageListView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            if (e.Node == tvImageListView.Nodes[0])
+            {
+                if (e.Node.IsExpanded)
+                    e.Node.Expand();
+                else
+                    e.Node.Collapse();
+                return;
+            }
+            try
+            {
+                var bmp = bmpImages[e.Node.SelectedImageIndex - 1];
+                Point bmplocation = new Point(0, 0);
+                Bitmap newImg = new Bitmap(pbCanvas.Image);
+                // Assign the first image to the picture variable.
+                using (Graphics g = Graphics.FromImage(newImg))
+                {
+                    g.DrawImage(bmp, bmplocation);
+                }
+                pbCanvas.Image = newImg;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
             messageQueue.Add("DrawImage");
             epd.DisplayImage(0, 0, e.Node.Text);
+        }
+
+        private void pbCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            //tt.Hide(pbCanvas);
         }
     }
 }

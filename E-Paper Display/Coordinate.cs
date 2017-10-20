@@ -10,8 +10,6 @@ namespace EPaperCommunicator
     {
         public short X { get; set; }
         public short Y { get; set; }
-        public int intX { get; set; }
-        public int intY { get; set; }
 
         public Coordinate()
         {
@@ -27,8 +25,8 @@ namespace EPaperCommunicator
 
         public Coordinate(int x, int y)
         {
-            intX = x;
-            intY = y;
+            X = Convert.ToInt16(x);
+            Y = Convert.ToInt16(y);
         }
 
         public byte[] ToByteArray()

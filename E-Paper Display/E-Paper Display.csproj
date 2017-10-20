@@ -59,6 +59,7 @@
       <DependentUpon>ePaperView.cs</DependentUpon>
     </Compile>
     <Compile Include="EpdMessage.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EpdCommunicator.cs" />

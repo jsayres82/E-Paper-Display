@@ -221,7 +221,7 @@ namespace EPaperCommunicator
         
         private void sendEpdMessage(EpdMessage msg)
         {
-            port.Write(msg.Message, 0, msg.Message.Length);
+            //port.Write(msg.Message, 0, msg.Message.Length);
         }
     }
 }
